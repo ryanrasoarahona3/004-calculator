@@ -1,9 +1,11 @@
 package org.calculator
 
+import scala.util.matching.Regex
+
 case class TreeNode(expression: String) {
   var left: TreeNode = null
   var right: TreeNode = null
-  var content: Float = 0.0f
+  var content: Any = 0.0f
 
   /**
    * Permet de vérifier si l'expression est un simple nombre (à ne plus décomposer)
@@ -21,6 +23,12 @@ case class TreeNode(expression: String) {
     true
   }
 
+  private def isNegativeNumber(): Boolean = {
+    val pattern = new Regex("\\-[\\d]+")
+    pattern matches(expression)
+    return false
+  }
+
   /**
    * Cette méthode permet de calculer la valeur saisie
    * @return
@@ -28,6 +36,10 @@ case class TreeNode(expression: String) {
   def evaluate(): Float = {
     if(left == null && right == null){
       return content.asInstanceOf[Float]
+    }else if(left != null && right != null){
+      if(content == "+"){// addition
+        return left.evaluate() + right.evaluate()
+      }
     }
     throw new Exception("Syntaxe non prise en compte")
   }
@@ -38,6 +50,12 @@ case class TreeNode(expression: String) {
     left = null
     right = null
     content = expression.toFloat
+  }else{
+    val pattern = "([0-9]+)(\\+)([0-9]+)".r
+    val pattern(leftExpr, operator, rightExpr) = expression
+    content = operator
+    left = TreeNode(leftExpr)
+    right = TreeNode(rightExpr)
   }
 
   print("Hello world, this is the constructor")
