@@ -14,7 +14,7 @@ case class TreeNode(expression: String) {
    */
   private def isASimpleNumber(): Boolean = {
     try {
-      expression.toFloat
+      expression.toFloat()
     } catch {
       case e: NumberFormatException => return false
     }
@@ -27,7 +27,7 @@ case class TreeNode(expression: String) {
    */
   def evaluate(): Float = {
     if(left == null && right == null){
-      return content.asInstanceOf[Float]
+      return content
     }
     throw new Exception("Syntaxe non prise en compte")
   }
