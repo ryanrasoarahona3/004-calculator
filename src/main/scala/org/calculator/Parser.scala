@@ -1,5 +1,10 @@
 package org.calculator
 
+
+/**
+ * À ne plus utiliser
+ * @deprecated Cette classe devrait être supprimée dans un futur proche
+ */
 class Parser(val expression: String) {
 
   def isNumber(): Boolean = {
