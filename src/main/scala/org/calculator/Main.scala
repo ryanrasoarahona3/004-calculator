@@ -12,13 +12,12 @@ object Main {
     new Frame {
       title = "Hello world"
 
-      val formulaInput = new TextField()
+      val formulaInput = new TextField() // utiliser Panel au lieu de Input, car un bouton doit aussi être inséré
 
       val canvas = new Canvas {
-        preferredSize = new Dimension(100, 100)
       }
 
-      contents = new FlowPanel {
+      /*contents = new FlowPanel {
         contents += new Label("Launch rainbows: ")
         contents += new Button("Click me") {
           reactions += {
@@ -27,6 +26,11 @@ object Main {
           }
         }
         contents+= canvas
+      }*/
+
+      contents = new BorderPanel {
+        add(canvas, BorderPanel.Position.Center)
+        add(formulaInput, BorderPanel.Position.South)
       }
 
       pack()
