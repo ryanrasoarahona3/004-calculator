@@ -3,7 +3,7 @@ package org.calculator
 case class TreeNode(expression: String) {
   var left: TreeNode = null
   var right: TreeNode = null
-  var content: Float = 0.0f
+  var content: Any = 0.0f
 
   /**
    * Permet de vérifier si l'expression est un simple nombre (à ne plus décomposer)
@@ -27,7 +27,11 @@ case class TreeNode(expression: String) {
    */
   def evaluate(): Float = {
     if(left == null && right == null){
-      return content
+      return content.asInstanceOf[Float]
+    }else if(left != null && right != null){
+      if(content == "+"){// addition
+        return left.evaluate() + right.evaluate()
+      }
     }
     throw new Exception("Syntaxe non prise en compte")
   }
