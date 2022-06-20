@@ -42,6 +42,12 @@ case class TreeNode(expression: String) {
     left = null
     right = null
     content = expression.toFloat
+  }else{
+    val pattern = "([0-9]+)(\\+)([0-9]+)".r
+    val pattern(leftExpr, operator, rightExpr) = expression
+    content = operator
+    left = TreeNode(leftExpr)
+    right = TreeNode(rightExpr)
   }
 
   print("Hello world, this is the constructor")
