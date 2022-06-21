@@ -31,6 +31,12 @@ case class TreeNode(expression: String) {
     }else if(left != null && right != null){
       if(content == "+"){// addition
         return left.evaluate() + right.evaluate()
+      }else if(content == "*"){
+        return left.evaluate() * right.evaluate()
+      }else if(content == "-"){
+        return left.evaluate() - right.evaluate()
+      }else if(content == "/"){
+        return left.evaluate() / right.evaluate()
       }
     }
     throw new Exception("Syntaxe non prise en compte")
@@ -43,8 +49,8 @@ case class TreeNode(expression: String) {
     right = null
     content = expression.toFloat
   }else{
-    val pattern = "([0-9]+)(\\+)([0-9]+)".r
-    val pattern(leftExpr, operator, rightExpr) = expression
+    val pattern = "([0-9]+(.[0-9]+)?)(\\+|\\*|\\-|\\/)([0-9]+(.[0-9]+)?)".r
+    val pattern(leftExpr, _l, operator, rightExpr, _r) = expression
     content = operator
     left = TreeNode(leftExpr)
     right = TreeNode(rightExpr)
