@@ -21,22 +21,30 @@ case class TreeNode(expression: String) {
     true
   }
 
+  private def isASimpleVariable(): Boolean = {
+    expression == "x"
+  }
+
   /**
    * Cette méthode permet de calculer la valeur saisie
    * @return
    */
-  def evaluate(): Float = {
+  def evaluate(xVar:Float = 0.0f): Float = {
     if(left == null && right == null){
-      return content.asInstanceOf[Float]
+      if(content == "x"){
+        return xVar
+      }else {
+        return content.asInstanceOf[Float]
+      }
     }else if(left != null && right != null){
       if(content == "+"){// addition
-        return left.evaluate() + right.evaluate()
+        return left.evaluate(xVar) + right.evaluate(xVar)
       }else if(content == "*"){
-        return left.evaluate() * right.evaluate()
+        return left.evaluate(xVar) * right.evaluate(xVar)
       }else if(content == "-"){
-        return left.evaluate() - right.evaluate()
+        return left.evaluate(xVar) - right.evaluate(xVar)
       }else if(content == "/"){
-        return left.evaluate() / right.evaluate()
+        return left.evaluate(xVar) / right.evaluate(xVar)
       }
     }
     throw new Exception("Syntaxe non prise en compte")
@@ -48,9 +56,13 @@ case class TreeNode(expression: String) {
     left = null
     right = null
     content = expression.toFloat
+  }else if(isASimpleVariable()){
+    left = null
+    right = null
+    content = "x"
   }else{
-    val pattern = "([0-9]+(.[0-9]+)?)(\\+|\\*|\\-|\\/)([0-9]+(.[0-9]+)?)".r
-    val pattern(leftExpr, _l, operator, rightExpr, _r) = expression
+    val pattern = "(x|([0-9]+(.[0-9]+)?))(\\+|\\*|\\-|\\/)(x|([0-9]+(.[0-9]+)?))".r
+    val pattern(leftExpr, _l, _l1, operator, rightExpr, _r, _l2) = expression
     content = operator
     left = TreeNode(leftExpr)
     right = TreeNode(rightExpr)

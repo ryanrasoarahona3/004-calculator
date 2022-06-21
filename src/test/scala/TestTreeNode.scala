@@ -49,4 +49,20 @@ class TestTreeNode extends AnyFunSuite {
     val p=new TreeNode("3.3+4.4")
     assert(p.evaluate() == 3.3f + 4.4f)
   }
+
+  test("TreeNode.simpleVariable"){
+    // Ici, c'est pour tester une fonction de type f(x)=x
+    val p = new TreeNode("x")
+    assert(p.evaluate(3.0f) == 3.0f)
+  }
+
+  test("TreeNode.3+x"){
+    val p = TreeNode("3+x")
+    assert(p.evaluate(10.0f) == 13.0f)
+  }
+
+  test("TreeNode.3*x"){
+    val p = TreeNode("3*x")
+    assert(p.evaluate(10.0f) == 30.0f)
+  }
 }
