@@ -14,7 +14,7 @@ class Transform (xc: Int, yc: Int, z: Int){
 
   def apply(x: Float, y: Float): (Float, Float) ={
     val outputX = xCenter + x*zoom
-    val outputY = yCenter + y*zoom
+    val outputY = yCenter - y*zoom
     (outputX, outputY)
   }
 }
