@@ -31,11 +31,27 @@ class Canvas extends Panel {
 
 
     // X Axis and Y axis
-    g.setColor(Color.BLACK)
+    g.setPaint(Color.BLACK)
     var _xAxisPos = t.apply(0, 0)._2
     g.drawLine(0, _xAxisPos.toInt, 400, _xAxisPos.toInt)
     var _yAxixPos = t.apply(0, 0)._1
     g.drawLine(_yAxixPos.toInt, 0, _yAxixPos.toInt, 400)
+
+
+    // Draw a f(x)=x function
+    val p = new TreeNode("x")
+    val o = p.evaluateWithinInterval(-4.0f, 4.0f, 0.5f)
+
+    g.setPaint(Color.BLUE)
+    var prev_point = o(0)
+    for(point <- o){
+      if(prev_point != point){
+        val p1 = t.apply(prev_point._1, prev_point._2)
+        val p2 = t.apply(point._1, point._2)
+        g.drawLine(p1._1.toInt, p1._2.toInt, p2._1.toInt, p2._2.toInt)
+      }
+      prev_point = point
+    }
   }
 
   this.preferredSize = new Dimension(400, 400);
