@@ -12,8 +12,11 @@ object Main {
     new Frame {
       title = "Hello world"
 
-      val formulaInput = new TextField() // utiliser Panel au lieu de Input, car un bouton doit aussi être inséré
-
+      // val formulaInput = new TextField() // utiliser Panel au lieu de Input, car un bouton doit aussi être inséré
+      val formulaInput = new BorderPanel {
+        add(new TextField, BorderPanel.Position.Center)
+        add(new Button("Go"), BorderPanel.Position.East)
+      }
       val canvas = new Canvas {
       }
 

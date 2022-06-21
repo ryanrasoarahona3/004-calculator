@@ -9,8 +9,10 @@ class Canvas extends Panel {
     val t = new Transform(200, 200, 80) // Should be an element property
 
     g.clearRect(0, 0, size.width, size.height)
+    /*
     g.setColor(Color.blue)
     g.fillOval(0, 0, 100, 100)
+     */
 
 
     // Tracer les grilles
