@@ -50,6 +50,17 @@ case class TreeNode(expression: String) {
     throw new Exception("Syntaxe non prise en compte")
   }
 
+  def evaluateWithinInterval(min:Float, max:Float, interval:Float): Array[(Float, Float)] ={
+    var output: Array[(Float,Float)] = Array()
+    var _x = min
+    while(_x <= max){
+      val _y = evaluate(_x)
+      output = output :+ (_x, _y)
+      _x+= interval
+    }
+    return output
+  }
+
   // l'algorithme est ici
   // On utilisera un algorithme récursif
   if(isASimpleNumber()) { // Le cas le plus simple
