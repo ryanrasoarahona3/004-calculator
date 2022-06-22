@@ -6,6 +6,8 @@ case class TreeNode2(expression: String, maskContent: String = "") {
   var right: TreeNode2 = null
   var content: Any = 0.0f
 
+  var funcModificator = "identity"
+
   /**
    * Permet de vérifier si l'expression est un simple nombre (à ne plus décomposer)
    * Sinon, on le décompose
@@ -37,12 +39,25 @@ case class TreeNode2(expression: String, maskContent: String = "") {
     pattern.matches(expression)
   }
 
+  /**
+   * Note that placeholder is required for this kind of expression
+   * @return
+   */
+  private def isASimpleFunction(): Boolean = {
+    val pattern = "(sin|cos)_".r
+    pattern.matches(expression)
+  }
+
   def evaluate(xVar:Float = 0.0f): Float = {
+    var f:Float=>Float = null
+    if(funcModificator == "identity") f = (x:Float)=>x
+    if(funcModificator == "sin") f = (x:Float)=>math.sin(x).toFloat
+    if(funcModificator == "cos") f = (x:Float)=>math.cos(x).toFloat
     if(left == null && right == null){
       if(content == "x"){
-        xVar
+        f(xVar)
       } else {
-        content.asInstanceOf[Float]
+        f(content.asInstanceOf[Float])
       }
     }else{
       return 0.0f
@@ -58,12 +73,18 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       left = null
       right = null
       content = "x"
-    }else if(isASimplePlaceholder()){
+    }else if(isASimplePlaceholder() || isASimpleFunction()) {
       // Create an alias
-      var alias = TreeNode2(maskContent)
+      val alias = TreeNode2(maskContent)
       left = alias.left
       right = alias.right
       content = alias.content
+      if (isASimpleFunction()) {
+        val pattern = "(sin|cos)_".r
+        val pattern(funcName) = expression
+        funcModificator = funcName
+        print()
+      }
     }
   }
   init()
