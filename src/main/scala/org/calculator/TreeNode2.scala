@@ -1,9 +1,9 @@
 package org.calculator
 
-class TreeNode2(expression: String, maskContent: String = "") {
+case class TreeNode2(expression: String, maskContent: String = "") {
 
-  var left: TreeNode = null
-  var right: TreeNode = null
+  var left: TreeNode2 = null
+  var right: TreeNode2 = null
   var content: Any = 0.0f
 
   /**
@@ -32,7 +32,7 @@ class TreeNode2(expression: String, maskContent: String = "") {
    * Est une masque à remplacer par maskContent
    * @return
    */
-  private def isSimpleMask(): Boolean = {
+  private def isASimplePlaceholder(): Boolean = {
     val pattern = "_+".r
     pattern.matches(expression)
   }
@@ -40,9 +40,9 @@ class TreeNode2(expression: String, maskContent: String = "") {
   def evaluate(xVar:Float = 0.0f): Float = {
     if(left == null && right == null){
       if(content == "x"){
-        return xVar
-      }else {
-        return content.asInstanceOf[Float]
+        xVar
+      } else {
+        content.asInstanceOf[Float]
       }
     }else{
       return 0.0f
@@ -58,6 +58,12 @@ class TreeNode2(expression: String, maskContent: String = "") {
       left = null
       right = null
       content = "x"
+    }else if(isASimplePlaceholder()){
+      // Create an alias
+      var alias = TreeNode2(maskContent)
+      left = alias.left
+      right = alias.right
+      content = alias.content
     }
   }
   init()
