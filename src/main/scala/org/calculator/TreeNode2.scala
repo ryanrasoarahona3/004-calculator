@@ -91,13 +91,13 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       }
     }else if(left != null && right != null) {
       if(content == "+"){// addition
-        return left.evaluate(xVar) + right.evaluate(xVar)
+        return f(left.evaluate(xVar) + right.evaluate(xVar))
       }else if(content == "*"){
-        return left.evaluate(xVar) * right.evaluate(xVar)
+        return f(left.evaluate(xVar) * right.evaluate(xVar))
       }else if(content == "-"){
-        return left.evaluate(xVar) - right.evaluate(xVar)
+        return f(left.evaluate(xVar) - right.evaluate(xVar))
       }else if(content == "/"){
-        return (left.evaluate(xVar) / right.evaluate(xVar))
+        return f(left.evaluate(xVar) / right.evaluate(xVar))
       }
       return 0.0f
     } else{

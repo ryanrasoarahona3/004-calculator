@@ -101,4 +101,19 @@ class TestTreeNode2 extends AnyFunSuite {
     assert(p.evaluate() == 7.0f)
   }
 
+  test("TreeNode.sin2x"){
+    val p = new TreeNode2("sin(2*x)")
+    assert(p.evaluate(math.Pi.toFloat/4) - 1.0 < 0.0001)
+  }
+
+  test("TreeNode.sin(x-1)"){
+    val p = new TreeNode2("sin(x-1)")
+    assert(p.evaluate((math.Pi.toFloat/2)+1) - 1.0 < 0.0001)
+  }
+
+  test("TreeNode.sin2x+1"){
+    val p = new TreeNode2("sin(2*x+1)")
+    assert(p.evaluate((math.Pi.toFloat/4)-0.5f) - 1.0 < 0.0001)
+  }
+
 }
