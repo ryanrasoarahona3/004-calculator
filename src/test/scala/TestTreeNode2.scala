@@ -74,4 +74,31 @@ class TestTreeNode2 extends AnyFunSuite {
     assert(p.evaluate() == 3.3f*3.3f)
   }
 
+  test("TreeNode.3+x"){
+    val p = TreeNode2("3+x")
+    assert(p.evaluate(10.0f) == 13.0f)
+  }
+
+  test("TreeNode.3*x"){
+    val p = TreeNode2("3*x")
+    assert(p.evaluate(10.0f) == 30.0f)
+  }
+
+  test("TreeNode.drawing"){
+    val p = new TreeNode2("x")
+    val o = p.evaluateWithinInterval(0.0f, 1.0f, 0.5f)
+    assert(o(1)._2 == 0.5f)
+    assert(o(2)._2 == 1.0f)
+  }
+
+  test("TreeNode.priorityOfMultiplicationOverAddition"){
+    val p = new TreeNode2("2*3+1")
+    assert(p.evaluate() == 7.0f)
+  }
+
+  test("TreeNode.priorityOfMultiplicationOverAddition2"){
+    val p = new TreeNode2("1+2*3")
+    assert(p.evaluate() == 7.0f)
+  }
+
 }

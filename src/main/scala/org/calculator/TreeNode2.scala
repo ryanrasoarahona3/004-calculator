@@ -61,7 +61,7 @@ case class TreeNode2(expression: String, maskContent: String = "") {
    * @return
    */
   private def isASimpleOperation(): (String, String, String) = {
-    val pattern = "(_|x|([0-9]+(.[0-9]+)?))?(\\+|\\*|\\-|\\/)(_|x|([0-9]+(.[0-9]+)?))".r
+    val pattern = "^(_|x|([0-9]+(\\.[0-9]+)?))?(\\+|\\*|\\-|\\/)(_|x|([0-9]+(\\.[0-9]+)?))$".r
     if(pattern.matches(expression)){
       var pattern(leftExpr, _l, _l1, operator, rightExpr, _r, _l2) = expression
       leftExpr = if(leftExpr == null) "0" else leftExpr
@@ -103,6 +103,17 @@ case class TreeNode2(expression: String, maskContent: String = "") {
     } else{
       return 0.0f
     }
+  }
+
+  def evaluateWithinInterval(min:Float, max:Float, interval:Float): Array[(Float, Float)] ={
+    var output: Array[(Float,Float)] = Array()
+    var _x = min
+    while(_x <= max){
+      val _y = evaluate(_x)
+      output = output :+ (_x, _y)
+      _x+= interval
+    }
+    return output
   }
 
   def init(): Unit ={
@@ -147,6 +158,14 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       val iaso = isASimpleOperation()
       if(iaso != null){
         val (leftExpr, operator, rightExpr) = iaso
+        content = operator
+        left = TreeNode2(leftExpr)
+        right = TreeNode2(rightExpr)
+        print()
+      }else{// Not a simple operation but without parenthesis
+        val pattern = "(.+)?(\\+|\\-)(.*)".r
+        var pattern(leftExpr, operator, rightExpr) = expression
+        leftExpr = if(leftExpr == null) "0" else leftExpr // IN case of negative number
         content = operator
         left = TreeNode2(leftExpr)
         right = TreeNode2(rightExpr)
