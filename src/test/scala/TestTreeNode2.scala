@@ -116,4 +116,19 @@ class TestTreeNode2 extends AnyFunSuite {
     assert(p.evaluate((math.Pi.toFloat/4)-0.5f) - 1.0 < 0.0001)
   }
 
+  test("TreeNode2.fonctionAvecParentheses"){
+    val p = TreeNode2("(2+2)*3")
+    assert(p.evaluate() == 12.0f)
+  }
+
+  test("TreeNode2.fonctionAvecParentheses2"){
+    val p = TreeNode2("(2+2)*3+1")
+    assert(p.evaluate() == 13.0f)
+  }
+
+  test("TreeNode2.fonctionAvecParenthesesEtX"){
+    val p = TreeNode2("(2+2)*3+x")
+    assert(p.evaluate(1.0f) == 13.0f)
+  }
+
 }

@@ -159,16 +159,16 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       if(iaso != null){
         val (leftExpr, operator, rightExpr) = iaso
         content = operator
-        left = TreeNode2(leftExpr)
-        right = TreeNode2(rightExpr)
+        left = TreeNode2(leftExpr, maskContent)
+        right = TreeNode2(rightExpr, maskContent)
         print()
       }else{// Not a simple operation but without parenthesis
         val pattern = "(.+)?(\\+|\\-)(.*)".r
         var pattern(leftExpr, operator, rightExpr) = expression
         leftExpr = if(leftExpr == null) "0" else leftExpr // IN case of negative number
         content = operator
-        left = TreeNode2(leftExpr)
-        right = TreeNode2(rightExpr)
+        left = TreeNode2(leftExpr, maskContent)
+        right = TreeNode2(rightExpr, maskContent)
         print()
       }
     }
