@@ -93,12 +93,23 @@ class TestTreeNode extends AnyFunSuite {
     assert(p.evaluate(1.0f) == -4.0f)
   }
 
-
-  /*
-  test("TreeNode.try-priorities"){
-    val p = new TreeNode("3*1+3")
-    print()
+  test("TreeNode.Parenthesis"){
+    val p = new TreeNode("(2+2)+3")
+    assert(p.evaluate() == 7.0f)
   }
 
-   */
+  test("TreeNode.Parenthesis2"){
+    val p = new TreeNode("(2+2)*3")
+    assert(p.evaluate() == 12.0f)
+  }
+
+  test("TreeNode.Parenthesis3"){
+    val p = new TreeNode("(2+2)*(1+2)")
+    assert(p.evaluate() == 12.0f)
+  }
+
+  test("TreeNode.MaskedExpr"){
+    val p = TreeNode("_____*4", "(1+1)")
+    assert(p.evaluate() == 8.0f)
+  }
 }
