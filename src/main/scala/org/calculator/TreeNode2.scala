@@ -170,7 +170,7 @@ case class TreeNode2(expression: String, maskContent: String = "") {
           content = operator
           left = TreeNode2(leftExpr, maskContent)
           right = TreeNode2(rightExpr, maskContent)
-          print()
+          return
         }
 
         val patternMulDiv = "(.+)?(\\*|\\/)(.*)".r
@@ -179,7 +179,7 @@ case class TreeNode2(expression: String, maskContent: String = "") {
           content = operator
           left = TreeNode2(leftExpr, maskContent)
           right = TreeNode2(rightExpr, maskContent)
-          print()
+          return
         }
       }
     }
