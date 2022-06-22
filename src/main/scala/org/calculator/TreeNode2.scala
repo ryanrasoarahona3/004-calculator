@@ -48,8 +48,27 @@ case class TreeNode2(expression: String, maskContent: String = "") {
     pattern.matches(expression)
   }
 
+  /**
+   * If expression has brackets
+   * @return
+   */
   private def hasBrackets(): Boolean = {
     ((expression contains "(") || (expression contains ")"))
+  }
+
+  /**
+   * Check if an expression is a simple operation
+   * @return
+   */
+  private def isASimpleOperation(): (String, String, String) = {
+    val pattern = "(_|x|([0-9]+(.[0-9]+)?))?(\\+|\\*|\\-|\\/)(_|x|([0-9]+(.[0-9]+)?))".r
+    if(pattern.matches(expression)){
+      var pattern(leftExpr, _l, _l1, operator, rightExpr, _r, _l2) = expression
+      leftExpr = if(leftExpr == null) "0" else leftExpr
+      (leftExpr, operator, rightExpr)
+    }else{
+      null
+    }
   }
 
   private def patchAlias(alias:TreeNode2)= {
@@ -70,7 +89,18 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       } else {
         f(content.asInstanceOf[Float])
       }
-    }else{
+    }else if(left != null && right != null) {
+      if(content == "+"){// addition
+        return left.evaluate(xVar) + right.evaluate(xVar)
+      }else if(content == "*"){
+        return left.evaluate(xVar) * right.evaluate(xVar)
+      }else if(content == "-"){
+        return left.evaluate(xVar) - right.evaluate(xVar)
+      }else if(content == "/"){
+        return (left.evaluate(xVar) / right.evaluate(xVar))
+      }
+      return 0.0f
+    } else{
       return 0.0f
     }
   }
@@ -113,6 +143,15 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       val pattern = "\\((.*)\\)".r
       var pattern(d) = sub_expression
       patchAlias(TreeNode2(masked_expression, d))
+    }else{
+      val iaso = isASimpleOperation()
+      if(iaso != null){
+        val (leftExpr, operator, rightExpr) = iaso
+        content = operator
+        left = TreeNode2(leftExpr)
+        right = TreeNode2(rightExpr)
+        print()
+      }
     }
   }
   init()

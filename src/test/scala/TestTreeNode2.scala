@@ -39,4 +39,39 @@ class TestTreeNode2 extends AnyFunSuite {
     assert(p.evaluate(0.0f) - 1.0f < 0.00001)
   }
 
+  test("TreeNode2.nombreNegatif") {
+    val p = new TreeNode2("-90")
+    assert(p.evaluate() == -90.0f) // .0f Float / .d Double
+  }
+
+  test("TreeNode.3p3") {
+    val p = new TreeNode2("3+3")
+    assert(p.evaluate() == 6.0f) //
+  }
+
+  test("TreeNode.3*3") {
+    val p = new TreeNode2("3*3")
+    assert(p.evaluate() == 9.0f)
+  }
+
+  test("TreeNode.3-3") {
+    val p = new TreeNode2("4-3")
+    assert(p.evaluate() == 1.0f)
+  }
+
+  test("TreeNode.6/3"){
+    val p = TreeNode2("6/3")
+    assert(p.evaluate() == 2.0f)
+  }
+
+  test("TreeNode.3.0+5"){
+    val p = TreeNode2("3.0+5")
+    assert(p.evaluate() == 8.0f)
+  }
+
+  test("TreeNode.3.3*3.3"){
+    val p = TreeNode2("3.3*3.3")
+    assert(p.evaluate() == 3.3f*3.3f)
+  }
+
 }
