@@ -25,6 +25,16 @@ case class TreeNode(expression: String) {
     expression == "x"
   }
 
+  private def isASimpleOperation(): (String, String, String) = {
+    val pattern = "(x|([0-9]+(.[0-9]+)?))(\\+|\\*|\\-|\\/)(x|([0-9]+(.[0-9]+)?))".r
+    if(pattern.matches(expression)){
+      val pattern(leftExpr, _l, _l1, operator, rightExpr, _r, _l2) = expression
+      (leftExpr, operator, rightExpr)
+    }else{
+      null
+    }
+  }
+
   /**
    * Cette méthode permet de calculer la valeur saisie
    * @return
@@ -72,12 +82,31 @@ case class TreeNode(expression: String) {
     right = null
     content = "x"
   }else{
+    val iaso = isASimpleOperation()
+    if(iaso != null){
+      val (leftExpr, operator, rightExpr) = iaso
+      content = operator
+      left = TreeNode(leftExpr)
+      right = TreeNode(rightExpr)
+      print()
+    }else{
+      // TODO: Should do without parenthesis
+      // Uniquement repérer les additions et les soustractions
+      val pattern = "(.+)(\\+|\\-)(.*)".r
+      val pattern(leftExpr, operator, rightExpr) = expression
+      content = operator
+      left = TreeNode(leftExpr)
+      right = TreeNode(rightExpr)
+    }
+  }
+
+  /*else{
     val pattern = "(x|([0-9]+(.[0-9]+)?))(\\+|\\*|\\-|\\/)(x|([0-9]+(.[0-9]+)?))".r
     val pattern(leftExpr, _l, _l1, operator, rightExpr, _r, _l2) = expression
     content = operator
     left = TreeNode(leftExpr)
     right = TreeNode(rightExpr)
-  }
+  }*/
 
   print("Hello world, this is the constructor")
 }
