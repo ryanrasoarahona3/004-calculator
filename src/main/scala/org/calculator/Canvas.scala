@@ -5,8 +5,10 @@ import scala.swing.{Dimension, Panel}
 import scala.util.control.Breaks.break
 
 class Canvas extends Panel {
+  var p: TreeNode2 = TreeNode2("0")
+
   override def paintComponent(g: Graphics2D): Unit ={
-    val t = new Transform(200, 200, 80) // Should be an element property
+    var t = new Transform(200, 200, 80) // Should be an element property
 
     g.clearRect(0, 0, size.width, size.height)
     /*
@@ -39,8 +41,7 @@ class Canvas extends Panel {
 
 
     // Draw a f(x)=x function
-    val p = new TreeNode("x")
-    val o = p.evaluateWithinInterval(-4.0f, 4.0f, 0.5f)
+    val o = p.evaluateWithinInterval(-4.0f, 4.0f, 0.01f)
 
     g.setPaint(Color.BLUE)
     var prev_point = o(0)

@@ -4,6 +4,7 @@ import scala.swing._
 import scala.swing.BorderPanel.Position._
 import event._
 import java.awt.{Color, Graphics2D}
+import javax.swing.BorderFactory
 import scala.util.Random
 
 object Main {
@@ -12,12 +13,26 @@ object Main {
     new Frame {
       title = "Hello world"
 
+      val goButton = new Button("Go")
+      val formulaField = new TextField()
       // val formulaInput = new TextField() // utiliser Panel au lieu de Input, car un bouton doit aussi être inséré
       val formulaInput = new BorderPanel {
-        add(new TextField, BorderPanel.Position.Center)
-        add(new Button("Go"), BorderPanel.Position.East)
+        add(new Label("f(x)="), BorderPanel.Position.West)
+        add(formulaField, BorderPanel.Position.Center)
+        add(goButton, BorderPanel.Position.East)
       }
+      formulaInput.border = BorderFactory.createEmptyBorder(5,5,5,5)
+
       val canvas = new Canvas {
+      }
+
+      listenTo(goButton)
+      reactions+= {
+        case ButtonClicked(`goButton`) => {
+          val p = new TreeNode2(formulaField.text)
+          canvas.p = p
+          canvas.repaint()
+        }
       }
 
       /*contents = new FlowPanel {
