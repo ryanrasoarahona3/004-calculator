@@ -163,13 +163,24 @@ case class TreeNode2(expression: String, maskContent: String = "") {
         right = TreeNode2(rightExpr, maskContent)
         print()
       }else{// Not a simple operation but without parenthesis
-        val pattern = "(.+)?(\\+|\\-)(.*)".r
-        var pattern(leftExpr, operator, rightExpr) = expression
-        leftExpr = if(leftExpr == null) "0" else leftExpr // IN case of negative number
-        content = operator
-        left = TreeNode2(leftExpr, maskContent)
-        right = TreeNode2(rightExpr, maskContent)
-        print()
+        val patternAddSub = "(.+)?(\\+|\\-)(.*)".r
+        if(patternAddSub.matches(expression)) {
+          var patternAddSub(leftExpr, operator, rightExpr) = expression
+          leftExpr = if (leftExpr == null) "0" else leftExpr // IN case of negative number
+          content = operator
+          left = TreeNode2(leftExpr, maskContent)
+          right = TreeNode2(rightExpr, maskContent)
+          print()
+        }
+
+        val patternMulDiv = "(.+)?(\\*|\\/)(.*)".r
+        if(patternMulDiv.matches(expression)) {
+          var patternMulDiv(leftExpr, operator, rightExpr) = expression
+          content = operator
+          left = TreeNode2(leftExpr, maskContent)
+          right = TreeNode2(rightExpr, maskContent)
+          print()
+        }
       }
     }
   }
