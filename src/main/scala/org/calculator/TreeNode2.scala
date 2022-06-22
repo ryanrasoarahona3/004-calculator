@@ -52,6 +52,13 @@ case class TreeNode2(expression: String, maskContent: String = "") {
     ((expression contains "(") || (expression contains ")"))
   }
 
+  private def patchAlias(alias:TreeNode2)= {
+    left = alias.left
+    right = alias.right
+    content = alias.content
+    funcModificator = alias.funcModificator
+  }
+
   def evaluate(xVar:Float = 0.0f): Float = {
     var f:Float=>Float = null
     if(funcModificator == "identity") f = (x:Float)=>x
@@ -79,10 +86,7 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       content = "x"
     }else if(isASimplePlaceholder() || isASimpleFunction()) {
       // Create an alias
-      val alias = TreeNode2(maskContent)
-      left = alias.left
-      right = alias.right
-      content = alias.content
+      patchAlias(TreeNode2(maskContent))
       if (isASimpleFunction()) {
         val pattern = "(sin|cos)_".r
         val pattern(funcName) = expression
@@ -108,21 +112,7 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       }
       val pattern = "\\((.*)\\)".r
       var pattern(d) = sub_expression
-
-
-      // Patching parameters with alias
-      val alias = TreeNode2(masked_expression, d)
-      left = alias.left
-      right = alias.right
-      content = alias.content
-      funcModificator = alias.funcModificator
-      if (isASimpleFunction()) {
-        val pattern = "(sin|cos)_".r
-        val pattern(funcName) = expression
-        funcModificator = funcName
-      }
-
-
+      patchAlias(TreeNode2(masked_expression, d))
     }
   }
   init()
