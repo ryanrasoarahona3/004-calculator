@@ -78,12 +78,21 @@ class TestTreeNode extends AnyFunSuite {
     assert(p.evaluate(10.0f) == 31.0f)
   }
 
-  /*
+  test("TreeNode.negativeX"){
+    val p = new TreeNode("-x")
+    assert(p.evaluate(10.0f) == -10.0f)
+  }
+
+  test("TreeNode.negativeX2"){
+    val p = new TreeNode("-x*3")
+    assert(p.evaluate(10.0f) == -30.0f)
+  }
+
   test("TreeNode.notASimpleOperation2"){
     val p = new TreeNode("-x*3.0-1.0")
     assert(p.evaluate(1.0f) == -4.0f)
   }
-   */
+
 
   /*
   test("TreeNode.try-priorities"){
