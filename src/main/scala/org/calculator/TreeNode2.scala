@@ -48,6 +48,10 @@ case class TreeNode2(expression: String, maskContent: String = "") {
     pattern.matches(expression)
   }
 
+  private def hasBrackets(): Boolean = {
+    ((expression contains "(") || (expression contains ")"))
+  }
+
   def evaluate(xVar:Float = 0.0f): Float = {
     var f:Float=>Float = null
     if(funcModificator == "identity") f = (x:Float)=>x
@@ -85,6 +89,40 @@ case class TreeNode2(expression: String, maskContent: String = "") {
         funcModificator = funcName
         print()
       }
+    }else if(hasBrackets()){
+      var bracket_level = 0
+      var sub_added = false
+      var masked_expression:String = ""
+      var sub_expression: String = "" // Between brackets
+      for(c <- expression){
+        if(c == '(') bracket_level+=1
+        if(bracket_level == 0 || sub_added){
+          masked_expression+=c
+        }else{
+          if(sub_expression == "")
+            masked_expression+= "_"
+          sub_expression+= c
+        }
+        if(c == ')') bracket_level-=1
+        if(c == ')' && bracket_level == 0) sub_added = true
+      }
+      val pattern = "\\((.*)\\)".r
+      var pattern(d) = sub_expression
+
+
+      // Patching parameters with alias
+      val alias = TreeNode2(masked_expression, d)
+      left = alias.left
+      right = alias.right
+      content = alias.content
+      funcModificator = alias.funcModificator
+      if (isASimpleFunction()) {
+        val pattern = "(sin|cos)_".r
+        val pattern(funcName) = expression
+        funcModificator = funcName
+      }
+
+
     }
   }
   init()

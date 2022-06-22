@@ -28,4 +28,15 @@ class TestTreeNode2 extends AnyFunSuite {
     val p = TreeNode2("cos_", ""+(math.Pi/2))
     assert(p.evaluate() - 0.0f < 0.00001)
   }
+
+  test("TreeNode2.testBracketWithinCos"){
+    val p = TreeNode2("cos(0)")
+    assert(p.evaluate() - 1.0f < 0.00001)
+  }
+
+  test("TreeNode2.testBracketWithinCosAndVariable"){
+    val p = TreeNode2("cos(x)")
+    assert(p.evaluate(0.0f) - 1.0f < 0.00001)
+  }
+
 }
