@@ -1,6 +1,6 @@
 package org.calculator
 
-case class TreeNode2(expression: String, maskContent: String = "") {
+case class TreeNode2(expression: String, maskContent: Array[String] = Array()) {
 
   var left: TreeNode2 = null
   var right: TreeNode2 = null
@@ -127,41 +127,62 @@ case class TreeNode2(expression: String, maskContent: String = "") {
       content = "x"
     }else if(isASimplePlaceholder() || isASimpleFunction()) {
       // Create an alias
-      patchAlias(TreeNode2(maskContent))
+      // Very important
+      patchAlias(TreeNode2(maskContent(0))) // expect that maskContent length equals 1
       if (isASimpleFunction()) {
         val pattern = "(sin|cos)_".r
         val pattern(funcName) = expression
         funcModificator = funcName
-        print()
       }
     }else if(hasBrackets()){
       var bracket_level = 0
       var sub_added = false
+      var in_sub = false
+      var sub_expressions:Array[String] = Array()
+      var _sub_expr = ""
+
       var masked_expression:String = ""
-      var sub_expression: String = "" // Between brackets
+      //var sub_expression: String = "" // Between brackets
       for(c <- expression){
         if(c == '(') bracket_level+=1
-        if(bracket_level == 0 || sub_added){
+        if(bracket_level == 0/* || sub_added*/){
           masked_expression+=c
-        }else{
-          if(sub_expression == "")
+          if(in_sub){
+            sub_expressions = sub_expressions :+ _sub_expr
+            _sub_expr = ""
+          }
+          in_sub = false
+        }
+        if(bracket_level > 0){
+          if(!in_sub)
             masked_expression+= "_"
-          sub_expression+= c
+          in_sub = true
+          /*if(sub_expression == "")
+            masked_expression+= "_"*/
+          _sub_expr+= c
         }
         if(c == ')') bracket_level-=1
         if(c == ')' && bracket_level == 0) sub_added = true
       }
-      val pattern = "\\((.*)\\)".r
-      var pattern(d) = sub_expression
-      patchAlias(TreeNode2(masked_expression, d))
+      if(sub_expressions.last != _sub_expr)
+        sub_expressions = sub_expressions :+ _sub_expr
+      var ds: Array[String] = Array()
+      for(sub_expr <- sub_expressions){
+        val pattern = "\\((.*)\\)".r
+        var pattern(d) = sub_expr
+        ds = ds:+ d
+      }
+      patchAlias(TreeNode2(masked_expression, ds))
+      // Use For loop
+      //var pattern(d) = sub_expression
+      //patchAlias(TreeNode2(masked_expression, d))
     }else{
       val iaso = isASimpleOperation()
       if(iaso != null){
         val (leftExpr, operator, rightExpr) = iaso
         content = operator
-        left = TreeNode2(leftExpr, maskContent)
-        right = TreeNode2(rightExpr, maskContent)
-        print()
+        left = TreeNode2(leftExpr, maskContent.slice(0, leftExpr.count(_ == '_')))
+        right = TreeNode2(rightExpr, maskContent.takeRight(rightExpr.count(_ == '_')))
       }else{// Not a simple operation but without parenthesis
         val patternAddSub = "(.+)?(\\+|\\-)(.*)".r
         if(patternAddSub.matches(expression)) {

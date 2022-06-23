@@ -13,7 +13,7 @@ class TestTreeNode2 extends AnyFunSuite {
     val p = new TreeNode2("x")
     assert(p.evaluate(2.0f) == 2.0f)
   }
-
+/*
   test("TreeNode2.simplePlaceholder") {
     val p = new TreeNode2("_", "5.0");
     assert(p.evaluate() == 5.0f)
@@ -28,7 +28,7 @@ class TestTreeNode2 extends AnyFunSuite {
     val p = TreeNode2("cos_", ""+(math.Pi/2))
     assert(p.evaluate() - 0.0f < 0.00001)
   }
-
+*/
   test("TreeNode2.testBracketWithinCos"){
     val p = TreeNode2("cos(0)")
     assert(p.evaluate() - 1.0f < 0.00001)
@@ -144,6 +144,21 @@ class TestTreeNode2 extends AnyFunSuite {
   test("TreeNode2.sincosadd"){
     val p = TreeNode2("sin(x)+cos(x)")
     assert(p.evaluate(2.0f) - math.sin(2.0)+math.cos(2.0) < 0.0001)
+  }
+
+  test("TreeNode2.complicatedFunction"){
+    val p = TreeNode2("sin(x)+cos(10*x)")
+    assert(p.evaluate(0.5f) - (math.sin(0.5) + math.cos(0.5*10)).toFloat < 0.0001)
+  }
+
+  test("TreeNode2.multiplePlaceholder"){
+    val p = TreeNode2("_+_", Array("2.0", "1.0"))
+    assert(p.evaluate() == 3.0f)
+  }
+
+  test("TreeNode2.multiplePlaceholderWithFunction"){
+    val p = TreeNode2("sin_+cos_", Array("x", "10*x"))
+    assert(p.evaluate(0.5f) - (math.sin(0.5) + math.cos(0.5*10)).toFloat < 0.0001)
   }
 
   // 1.5*cos(5*(x*x))
