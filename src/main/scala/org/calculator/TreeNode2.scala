@@ -1,6 +1,6 @@
 package org.calculator
 
-case class TreeNode2(expression: String, maskContent: Array[String] = Array()) {
+case class TreeNode2(expression: String, maskContent: Array[String] = Array(), needInit: Boolean = true) {
 
   var left: TreeNode2 = null
   var right: TreeNode2 = null
@@ -210,5 +210,67 @@ case class TreeNode2(expression: String, maskContent: Array[String] = Array()) {
       }
     }
   }
-  init()
+  if(needInit)
+    init()
+
+  def simplify(): TreeNode2 = {
+    return null
+  }
+
+  def derivate(): TreeNode2 = {
+    if(left == null && right == null){
+      if(content == "x"){
+        return TreeNode2("1.0")
+      }else{
+        return TreeNode2("0.0")
+      }
+    }else if(left != null && right != null) {
+      val o = TreeNode2("", Array(), false)
+      if (content == "+" || content == "-") {
+        o.left = left.derivate()
+        o.right = right.derivate()
+        o.content = content
+      }else if(content == "*"){
+        val oleft = TreeNode2("", Array(), false)
+        val oright = TreeNode2("", Array(), false)
+
+        oleft.left = left
+        oleft.content = "*"
+        oleft.right = right.derivate()
+
+        oright.left = left.derivate()
+        oright.content = "*"
+        oright.right = right
+
+        o.content = "+"
+        o.left = oleft
+        o.right = oright
+      }else if(content == "/"){
+        val ou = TreeNode2("", Array(), false)
+        val ouleft = TreeNode2("", Array(), false)
+        val ouright = TreeNode2("", Array(), false)
+        val od = TreeNode2("", Array(), false)
+
+        ouleft.left = left.derivate()
+        ouleft.content = "*"
+        ouleft.right = right
+        ou.content = "-"
+        ouright.left = left
+        ouright.content = "*"
+        ouright.right = right.derivate()
+        ou.left = ouleft
+        ou.right = ouright
+
+        o.content = "/"
+        od.left = right
+        od.content = "*"
+        od.right = right
+
+        o.left = ou
+        o.right = od
+      }
+      return o
+    }
+    return null
+  }
 }
