@@ -50,4 +50,16 @@ class TestTreeNode2Derivate extends AnyFunSuite{
     val q = p.derivate()
     assert(q.evaluate(2) == (4))
   }
+
+  test("TreeNode2.derivate.gof"){
+    val p = TreeNode2("sin(x)")
+    val q = p.derivate()
+    assert(q.evaluate(0) == 1.0f)
+  }
+
+  test("TreeNode2.derivate.cos"){
+    val p = TreeNode2("cos(x)")
+    val q = p.derivate()
+    assert(q.evaluate(Math.PI.toFloat/2) == -1.0f)
+  }
 }

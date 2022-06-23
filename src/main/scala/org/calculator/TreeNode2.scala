@@ -1,6 +1,6 @@
 package org.calculator
 
-case class TreeNode2(expression: String, maskContent: Array[String] = Array(), needInit: Boolean = true) {
+case class TreeNode2(var expression: String, maskContent: Array[String] = Array(), needInit: Boolean = true) {
 
   var left: TreeNode2 = null
   var right: TreeNode2 = null
@@ -218,56 +218,89 @@ case class TreeNode2(expression: String, maskContent: Array[String] = Array(), n
   }
 
   def derivate(): TreeNode2 = {
-    if(left == null && right == null){
-      if(content == "x"){
-        return TreeNode2("1.0")
-      }else{
-        return TreeNode2("0.0")
+    if(funcModificator == "identity") {
+      if (left == null && right == null) {
+        if (content == "x") {
+          return TreeNode2("1.0")
+        } else {
+          return TreeNode2("0.0")
+        }
+      } else if (left != null && right != null) {
+        val o = TreeNode2("", Array(), false)
+        if (content == "+" || content == "-") {
+          o.left = left.derivate()
+          o.right = right.derivate()
+          o.content = content
+        } else if (content == "*") {
+          val oleft = TreeNode2("", Array(), false)
+          val oright = TreeNode2("", Array(), false)
+
+          oleft.left = left
+          oleft.content = "*"
+          oleft.right = right.derivate()
+
+          oright.left = left.derivate()
+          oright.content = "*"
+          oright.right = right
+
+          o.content = "+"
+          o.left = oleft
+          o.right = oright
+        } else if (content == "/") {
+          val ou = TreeNode2("", Array(), false)
+          val ouleft = TreeNode2("", Array(), false)
+          val ouright = TreeNode2("", Array(), false)
+          val od = TreeNode2("", Array(), false)
+
+          ouleft.left = left.derivate()
+          ouleft.content = "*"
+          ouleft.right = right
+          ou.content = "-"
+          ouright.left = left
+          ouright.content = "*"
+          ouright.right = right.derivate()
+          ou.left = ouleft
+          ou.right = ouright
+
+          o.content = "/"
+          od.left = right
+          od.content = "*"
+          od.right = right
+
+          o.left = ou
+          o.right = od
+        }
+        return o
       }
-    }else if(left != null && right != null) {
+    }else{
       val o = TreeNode2("", Array(), false)
-      if (content == "+" || content == "-") {
-        o.left = left.derivate()
-        o.right = right.derivate()
-        o.content = content
-      }else if(content == "*"){
-        val oleft = TreeNode2("", Array(), false)
-        val oright = TreeNode2("", Array(), false)
-
-        oleft.left = left
-        oleft.content = "*"
-        oleft.right = right.derivate()
-
-        oright.left = left.derivate()
-        oright.content = "*"
-        oright.right = right
-
-        o.content = "+"
+      if(funcModificator == "sin"){
+        val this_identity = this.copy()
+        this_identity.funcModificator = "identity"
+        this_identity.expression = ""
+        val oleft = this_identity.derivate()
+        o.content = "*"
+        val oright = this.copy()
+        oright.funcModificator = "cos"
+        oright.expression = ""
         o.left = oleft
         o.right = oright
-      }else if(content == "/"){
-        val ou = TreeNode2("", Array(), false)
-        val ouleft = TreeNode2("", Array(), false)
-        val ouright = TreeNode2("", Array(), false)
-        val od = TreeNode2("", Array(), false)
+      }else if(funcModificator == "cos"){
+        val so = TreeNode2("", Array(), false)
+        val this_identity = this.copy()
+        this_identity.funcModificator = "identity"
+        this_identity.expression = ""
+        val oleft = this_identity.derivate()
+        so.content = "*"
+        val oright = this.copy()
+        oright.funcModificator = "sin"
+        oright.expression = ""
+        so.left = oleft
+        so.right = oright
 
-        ouleft.left = left.derivate()
-        ouleft.content = "*"
-        ouleft.right = right
-        ou.content = "-"
-        ouright.left = left
-        ouright.content = "*"
-        ouright.right = right.derivate()
-        ou.left = ouleft
-        ou.right = ouright
-
-        o.content = "/"
-        od.left = right
-        od.content = "*"
-        od.right = right
-
-        o.left = ou
-        o.right = od
+        o.left = TreeNode2("-1")
+        o.content = "*"
+        o.right = so
       }
       return o
     }
