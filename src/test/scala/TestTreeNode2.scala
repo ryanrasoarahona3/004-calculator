@@ -13,22 +13,23 @@ class TestTreeNode2 extends AnyFunSuite {
     val p = new TreeNode2("x")
     assert(p.evaluate(2.0f) == 2.0f)
   }
-/*
+
   test("TreeNode2.simplePlaceholder") {
-    val p = new TreeNode2("_", "5.0");
+    val p = new TreeNode2("_", Array("5.0"));
     assert(p.evaluate() == 5.0f)
   }
 
   test("TreeNode2.simpleFunctionSinAndPlaceholder"){
-    val p = TreeNode2("sin_", ""+(math.Pi/2))
+    val p = TreeNode2("sin_", Array(""+(math.Pi/2)))
     assert(p.evaluate() - 1.0f < 0.00001)
   }
 
   test("TreeNode2.simpleFunctionCosAndPlaceholder"){
-    val p = TreeNode2("cos_", ""+(math.Pi/2))
+    val p = TreeNode2("cos_", Array(""+(math.Pi/2)))
     assert(p.evaluate() - 0.0f < 0.00001)
   }
-*/
+
+  // HERE
   test("TreeNode2.testBracketWithinCos"){
     val p = TreeNode2("cos(0)")
     assert(p.evaluate() - 1.0f < 0.00001)

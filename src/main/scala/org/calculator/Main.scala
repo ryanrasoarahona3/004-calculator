@@ -11,7 +11,7 @@ object Main {
   def main(args: Array[String]): Unit = {
 
     new Frame {
-      title = "Hello world"
+      title = "Calculator"
 
       val goButton = new Button("Go")
       val formulaField = new TextField()

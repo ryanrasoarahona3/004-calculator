@@ -61,7 +61,7 @@ case class TreeNode2(expression: String, maskContent: Array[String] = Array()) {
    * @return
    */
   private def isASimpleOperation(): (String, String, String) = {
-    val pattern = "^(_|x|([0-9]+(\\.[0-9]+)?))?(\\+|\\*|\\-|\\/)(_|x|([0-9]+(\\.[0-9]+)?))$".r
+    val pattern = "^(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))?(\\+|\\*|\\-|\\/)(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))$".r
     if(pattern.matches(expression)){
       var pattern(leftExpr, _l, _l1, operator, rightExpr, _r, _l2) = expression
       leftExpr = if(leftExpr == null) "0" else leftExpr
@@ -164,8 +164,13 @@ case class TreeNode2(expression: String, maskContent: Array[String] = Array()) {
         if(c == ')') bracket_level-=1
         if(c == ')' && bracket_level == 0) sub_added = true
       }
-      if(sub_expressions.last != _sub_expr)
+      if(sub_expressions.length > 0) {
+        if(sub_expressions.last != _sub_expr && _sub_expr != "")
+          sub_expressions = sub_expressions :+ _sub_expr
+      } else if (_sub_expr != "") {
         sub_expressions = sub_expressions :+ _sub_expr
+      }
+
       var ds: Array[String] = Array()
       for(sub_expr <- sub_expressions){
         val pattern = "\\((.*)\\)".r
