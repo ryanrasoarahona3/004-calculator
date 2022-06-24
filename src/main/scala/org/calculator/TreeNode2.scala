@@ -13,7 +13,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
    * Sinon, on le décompose
    * @return
    */
-  private def isASimpleNumber(): Boolean = {
+  def isASimpleNumber(): Boolean = {
     try {
       expression.toFloat
     } catch {
@@ -213,7 +213,67 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
   if(needInit)
     init()
 
+  private def isConstant(): Boolean ={
+    if(expression contains("x"))
+      return false
+    return true
+  }
+
   def simplify(): TreeNode2 = {
+    if (left == null && right == null) {
+      return this.copy()
+    } else if(isConstant()) {
+      return TreeNode2(""+evaluate())
+    } else { // Variable
+      if(true){
+        val o = TreeNode2("", Array(), false)
+        o.left = TreeNode2("", Array(), false)
+        o.left.left = left.derivate()
+        o.left.content = content
+        o.left.right = right.derivate()
+        o.left = o.left.simplify()
+        return o
+      }
+        /*if(content == "+"){
+          // même dérivé -> additionnable
+          // Dérivé additionnable -> additionnable
+          var sumOfDerivatives = TreeNode2("", Array(), false)
+          sumOfDerivatives.left = left.derivate().simplify()
+          sumOfDerivatives.right = right.derivate().simplify()
+          sumOfDerivatives.content = content
+          sumOfDerivatives = sumOfDerivatives.simplify()
+
+          if(sumOfDerivatives.isASimpleNumber()){
+            val o = TreeNode2("", Array(), false)
+
+            val variablePart = TreeNode2("", Array(), false)
+            variablePart.content = "/"
+
+            return o
+          }else{
+
+          }
+
+        }
+      }*/
+      /*if(left.derivate().expression == right.derivate().expression) {
+        // Une expression qui peut être utile
+        val o = TreeNode2("", Array(), false)
+        o.left = TreeNode2("", Array(), false)
+        o.left.left = left.derivate()
+        o.left.content = content
+        o.left.right = right.derivate()
+        o.left = o.left.simplify()
+        print()
+
+      }*/else{
+        val o = this.copy()
+        o.left = o.left.simplify()
+        o.right = o.right.simplify()
+        o.expression = o.left.expression + o.content + o.right.expression
+        return o
+      }
+    }
     return null
   }
 
