@@ -62,4 +62,23 @@ class TestTreeNode2Derivate extends AnyFunSuite{
     val q = p.derivate()
     assert(q.evaluate(Math.PI.toFloat/2) == -1.0f)
   }
+
+  // Pour faire en sorte que les dérivés construits ont une expression
+  test("TreeNode2.derivateExpr.c"){
+    val p = TreeNode2("1.0")
+    val q = p.derivate()
+    assert(q.expression == "0.0")
+  }
+
+  test("TreeNod2.derivateExpr.x"){
+    val p = TreeNode2("x")
+    val q = p.derivate()
+    assert(q.expression == "1.0")
+  }
+
+  test("TreeNode2.derivateExpr.x+c"){
+    val p = TreeNode2("x+1.0")
+    val q = p.derivate()
+    assert(q.expression == "1.0+0.0")
+  }
 }

@@ -1,4 +1,5 @@
 import org.calculator.TreeNode2
+import org.calculator.SimplifiableTreeNode
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestTreeNode2Simplify extends AnyFunSuite{
@@ -20,16 +21,30 @@ class TestTreeNode2Simplify extends AnyFunSuite{
     assert(q.expression == "6.0")
   }
 
+  /**
+   * // TODO
   test("Simplify.nestedConstant"){
     val p = TreeNode2("(3.0+3.0)*x")
     val q = p.simplify()
     assert(q.expression == "6.0*x")
   }
+  */
 
   test("Simplify.nestedWithConstantAndX"){
     val p = TreeNode2("1.0+1.0+x")
     val q = p.simplify()
     print()
+  }
+
+  test("Simplify.simplifiableTreeNode"){
+    val p = new SimplifiableTreeNode("1.0+2.0")
+    assert(p.evaluate() == 3.0)
+  }
+
+  test("Simplify.simpleSwap+*"){ // not work on - and /
+    val p = new SimplifiableTreeNode("1.0+2.0")
+    val q = p.swap()
+    assert(q.expression == "2.0+1.0")
   }
 
   /*

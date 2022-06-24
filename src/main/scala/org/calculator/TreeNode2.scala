@@ -9,6 +9,12 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
   var funcModificator = "identity"
 
   /**
+   * This function is only used within SimplifiableExpression
+   * A Trait can be also used
+   */
+  def refreshExpression(): Unit = null
+
+  /**
    * Permet de vérifier si l'expression est un simple nombre (à ne plus décomposer)
    * Sinon, on le décompose
    * @return
@@ -26,7 +32,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
    * Est la variable X
    * @return
    */
-  private def isASimpleVariable(): Boolean = {
+  def isASimpleVariable(): Boolean = {
     expression == "x"
   }
 
@@ -291,6 +297,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           o.left = left.derivate()
           o.right = right.derivate()
           o.content = content
+          o.expression = o.left.expression + o.content + o.right.expression
         } else if (content == "*") {
           val oleft = TreeNode2("", Array(), false)
           val oright = TreeNode2("", Array(), false)
