@@ -47,4 +47,9 @@ class TestGetExpression extends AnyFunSuite{
     val q = p.derivate()
     assert(q.getExpression() == "1.0*cos(x)")
   }
+
+  test("Expression.0.0-x"){
+    val p = TreeNode2("0.0-x")
+    assert(p.getExpression() == "-x")
+  }
 }

@@ -390,6 +390,10 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           rightExpr = "(" + rightExpr + ")"
         }
         return leftExpr+content+rightExpr
+      }else if(content == "-" && left.getExpression() == "0.0"){
+        if(right.getExpression() == "*" || right.getExpression() == "/")
+          return "-("+right.getExpression()+")"
+        return "-"+right.getExpression()
       }else{
         // Only addition
         return left.getExpression()+content+right.getExpression()
