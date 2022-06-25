@@ -50,7 +50,7 @@ object Main {
           canvas.q = q
           canvas.repaint()
 
-          val d = p.derivate().getSimplified().getSimplified().getSimplified()
+          val d = p.derivate().getSimplifiedLoop()
           derivationField.text = d.getExpression()
         }
       }

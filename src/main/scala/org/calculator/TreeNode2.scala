@@ -460,9 +460,9 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
       if(getExpression() contains "x"){
         // Variable
         val o = TreeNode2("", Array(), false)
-        o.left = left.getSimplified().getSimplified()
+        o.left = left.getSimplifiedLoop()
         o.content = content
-        o.right = right.getSimplified().getSimplified()
+        o.right = right.getSimplifiedLoop()
         o.funcModificator = funcModificator
 
 
@@ -474,7 +474,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
             val __ = o.left
             o.left = o.right
             o.right = __
-            return o.getSimplified().getSimplified()
+            return o.getSimplifiedLoop()
           }
 
           // Addition with zero
@@ -505,7 +505,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           _r.right = right
           left = _l
           right = _r
-          return getSimplified().getSimplified()
+          return getSimplifiedLoop()
         }
         // Nested multiplication 1
         if(right.content == "*" && right.funcModificator == "identity" && content == "*" && left.isScalar() && right.left.isScalar()){
@@ -516,7 +516,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           _l.right = right.left
           left = _l
           right = _r
-          return getSimplified().getSimplified()
+          return getSimplifiedLoop()
         }
         // Nested multiplication 2
         if(content == "*" && left.content == "*" && right.funcModificator == "identity"){
@@ -528,7 +528,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
             _l.right = right
             left = _l
             right = _r
-            return getSimplified().getSimplified()
+            return getSimplifiedLoop()
           }
         }
 
@@ -538,14 +538,14 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
             if(right.left.isScalar() && right.left.content == 0.0f) {
               content = "-"
               right = right.right
-              return getSimplified().getSimplified()
+              return getSimplifiedLoop()
             }
           }
           if(right.content == "*"){
             if(right.left.isScalar() && right.left.content == -1.0f) {
               content = "-"
               right = right.right
-              return getSimplified().getSimplified()
+              return getSimplifiedLoop()
             }
           }
         }
@@ -576,7 +576,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
       o.content = content
       o.right = right
       o.funcModificator = "identity" // Important
-      val p = o.getSimplified().getSimplified().getSimplified()
+      val p = o.getSimplifiedLoop()
       p.funcModificator = funcModificator
       return p
     }
