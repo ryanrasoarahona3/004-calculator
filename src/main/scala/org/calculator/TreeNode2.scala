@@ -418,14 +418,32 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
     return getExpression() == "x"
   }
 
-  private def isAXForm(): Boolean ={
+  private def isAXForm(): Boolean = {
+    if(getExpression() == "x") return true
     if(content == "*"){
       if(left.isScalar() && right.isX()) return true
       if(right.isScalar() && left.isX()) return true
     }else if(content == "/"){
       if(left.isX() && right.isScalar()) return true
     }
-    false
+  false
+  }
+
+  private def getAXForm(): TreeNode2 ={
+    if(getExpression() == "x") return TreeNode2("1.0")
+    if(content == "*"){
+      if(left.isScalar() && right.isX()) return left
+      if(right.isScalar() && left.isX()) return right
+    }else if(content == "/"){
+      if(left.isX() && right.isScalar()){
+        val o = TreeNode2("", Array(), false)
+        o.left = TreeNode2("1.0")
+        o.content = "/"
+        o.right = right
+        return o
+      }
+    }
+    null
   }
 
   def getSimplified(): TreeNode2 ={
@@ -442,14 +460,37 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
       o.right = right.getSimplified()
       o.funcModificator = funcModificator
 
-      // Sorting
-      if(o.left.isScalar() && o.right.isX()){
-        // Swap
-        val __ = o.left
-        o.left = o.right
-        o.right = __
+
+      if(content == "+" || content == "-"){
+
+        // Sorting
+        if(o.left.isScalar() && o.right.isX()){
+          // Swap
+          val __ = o.left
+          o.left = o.right
+          o.right = __
+        }
+
+        // Addition with zero
+        if(right.getExpression() == "0.0"){
+          return left
+        }
+
+        // Ax+bx
+        if(left.isAXForm() && right.isAXForm()){
+          val o = TreeNode2("", Array(), false)
+          val _ol = TreeNode2("", Array(), false)
+          _ol.content = content // + or -
+          _ol.left = left.getAXForm()
+          _ol.right = right.getAXForm()
+          o.left = _ol
+          o.content = "*"
+          o.right = TreeNode2("x")
+          return o
+        }
       }
 
+      // Nested addition
       if(left.content == "+" && content == "+" && left.right.isScalar() && right.isScalar()){
         val _l = left.left
         val _r = TreeNode2("", Array(), false)
@@ -468,11 +509,16 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
         o.left = o.right
         o.right = __
       }
-
       // Multiplication By Zero
       if(left.getExpression() == "0.0" && right.isX()){
         return TreeNode2("0.0")
       }
+      // MUltiplication By One
+      if(left.getExpression() == "1.0"){
+        return right
+      }
+
+
 
       return o
     }
