@@ -12,6 +12,11 @@ object Main {
 
     new Frame {
       title = "Calculator"
+      resizable = false
+
+      override def closeOperation(): Unit = {
+        dispose() // OSX issue
+      }
 
       val goButton = new Button("Go")
       val formulaField = new TextField()

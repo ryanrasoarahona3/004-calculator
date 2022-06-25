@@ -15,6 +15,8 @@ class Canvas extends Panel {
     //g.setRenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     g.setRenderingHints(Map(RenderingHints.KEY_ANTIALIASING -> RenderingHints.VALUE_ANTIALIAS_ON).asJava)
+    g.setRenderingHints(Map(RenderingHints.KEY_TEXT_ANTIALIASING -> RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB).asJava)
+    g.setRenderingHints(Map(RenderingHints.KEY_FRACTIONALMETRICS -> RenderingHints.VALUE_FRACTIONALMETRICS_ON).asJava)
 
     g.clearRect(0, 0, size.width, size.height)
     /*
@@ -29,12 +31,20 @@ class Canvas extends Panel {
     g.setPaint(Color.lightGray)
     g.drawLine(200, 0, 200, 400)
     for(x <- -4 to 4){ // Vertical
-      var _x = t.apply(x, 0)._1
-      g.drawLine(_x.toInt, 0, _x.toInt, 400)
+      var _x = t.apply(x, 0)
+      g.setPaint(Color.lightGray)
+      g.drawLine(_x._1.toInt, 0, _x._1.toInt, 400)
+
+      g.setPaint(Color.BLACK)
+      g.drawString(""+x, _x._1+2 ,_x._2+13)
     }
     for(y <- -4 to 4){ // HOrizontal
-      var _y = t.apply(0, y)._2
-      g.drawLine(0, _y.toInt, 400, _y.toInt)
+      var _y = t.apply(0, y)
+      g.setPaint(Color.lightGray)
+      g.drawLine(0, _y._2.toInt, 400, _y._2.toInt)
+
+      g.setPaint(Color.BLACK)
+      g.drawString(""+y, _y._1+2, _y._2+13)
     }
 
 
