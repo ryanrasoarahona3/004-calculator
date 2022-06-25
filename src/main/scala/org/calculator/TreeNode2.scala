@@ -518,6 +518,23 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           right = _r
           return getSimplified().getSimplified()
         }
+        // Nested substraction (special case)
+        if(content == "+" && funcModificator == "identity"){
+          if(right.content == "-"){
+            if(right.left.isScalar() && right.left.content == 0.0f) {
+              content = "-"
+              right = right.right
+              return getSimplified().getSimplified()
+            }
+          }
+          if(right.content == "*"){
+            if(right.left.isScalar() && right.left.content == -1.0f) {
+              content = "-"
+              right = right.right
+              return getSimplified().getSimplified()
+            }
+          }
+        }
 
         // Swap multiplication
         if(content == "*" && left.isX() && right.isScalar()){
