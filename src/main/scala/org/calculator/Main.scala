@@ -44,7 +44,7 @@ object Main {
           canvas.p = p
           canvas.repaint()
 
-          val d = p.derivate()
+          val d = p.derivate().getSimplified()
           derivationField.text = d.getExpression()
         }
       }

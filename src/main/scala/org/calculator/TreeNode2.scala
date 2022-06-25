@@ -405,6 +405,29 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
     return ""
   }
 
+  private def isScalar(): Boolean ={
+    try {
+      getExpression().toFloat
+    } catch {
+      case e: NumberFormatException => return false
+    }
+    true
+  }
+
+  private def isX(): Boolean ={
+    return getExpression() == "x"
+  }
+
+  private def isAXForm(): Boolean ={
+    if(content == "*"){
+      if(left.isScalar() && right.isX()) return true
+      if(right.isScalar() && left.isX()) return true
+    }else if(content == "/"){
+      if(left.isX() && right.isScalar()) return true
+    }
+    false
+  }
+
   def getSimplified(): TreeNode2 ={
     if(left == null && right == null){
       return this
@@ -418,6 +441,39 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
       o.content = content
       o.right = right.getSimplified()
       o.funcModificator = funcModificator
+
+      // Sorting
+      if(o.left.isScalar() && o.right.isX()){
+        // Swap
+        val __ = o.left
+        o.left = o.right
+        o.right = __
+      }
+
+      if(left.content == "+" && content == "+" && left.right.isScalar() && right.isScalar()){
+        val _l = left.left
+        val _r = TreeNode2("", Array(), false)
+        _r.content = "+"
+        _r.left = left.right
+        _r.right = right
+        left = _l
+        right = _r
+        return getSimplified()
+      }
+
+      // Swap multiplication
+      if(content == "*" && left.isX() && right.isScalar()){
+        // Swap
+        val __ = o.left
+        o.left = o.right
+        o.right = __
+      }
+
+      // Multiplication By Zero
+      if(left.getExpression() == "0.0" && right.isX()){
+        return TreeNode2("0.0")
+      }
+
       return o
     }
     null
