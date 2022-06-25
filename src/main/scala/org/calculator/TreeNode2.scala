@@ -395,7 +395,10 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
         return left.getExpression()+content+right.getExpression()
       }
     }else if(funcModificator != "identity"){
-      val tn = copy()
+      val tn = TreeNode2("", Array(), false)
+      tn.content = content
+      tn.left = left
+      tn.right = right
       tn.funcModificator = "identity"
       return funcModificator+"("+tn.getExpression()+")"
     }

@@ -41,4 +41,10 @@ class TestGetExpression extends AnyFunSuite{
     val p = TreeNode2("2.0*sin(x+2.0)")
     assert(p.getExpression() == "2.0*sin(x+2.0)")
   }
+
+  test("Expr.derivate"){
+    val p = TreeNode2("sin(x)")
+    val q = p.derivate()
+    assert(q.getExpression() == "1.0*cos(x)")
+  }
 }
