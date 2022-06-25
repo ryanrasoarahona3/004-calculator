@@ -402,7 +402,24 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
       tn.funcModificator = "identity"
       return funcModificator+"("+tn.getExpression()+")"
     }
-
     return ""
+  }
+
+  def getSimplified(): TreeNode2 ={
+    if(left == null && right == null){
+      return this
+    }else if(!(getExpression() contains "x")){
+      // Constant
+      return TreeNode2(""+evaluate())
+    }else if(getExpression() contains "x"){
+      // Variable
+      val o = TreeNode2("", Array(), false)
+      o.left = left.getSimplified()
+      o.content = content
+      o.right = right.getSimplified()
+      o.funcModificator = funcModificator
+      return o
+    }
+    null
   }
 }
