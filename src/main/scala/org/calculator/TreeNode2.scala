@@ -474,6 +474,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
             val __ = o.left
             o.left = o.right
             o.right = __
+            return o.getSimplified().getSimplified()
           }
 
           // Addition with zero
