@@ -71,4 +71,9 @@ class TestSimplification extends AnyFunSuite{
     print()
   }
    */
+
+  test("Simplification.-1.0*2.0*2.0*x"){
+    val p = TreeNode2("sin(x+x)")
+    assert(p.getSimplified().getExpression() == "sin(2.0*x)")
+  }
 }

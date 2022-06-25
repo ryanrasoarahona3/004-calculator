@@ -452,75 +452,86 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
     }else if(!(getExpression() contains "x")){
       // Constant
       return TreeNode2(""+evaluate())
-    }else if(getExpression() contains "x"){
-      // Variable
-      val o = TreeNode2("", Array(), false)
-      o.left = left.getSimplified()
-      o.content = content
-      o.right = right.getSimplified()
-      o.funcModificator = funcModificator
+    }else if(funcModificator == "identity"){
+      if(getExpression() contains "x"){
+        // Variable
+        val o = TreeNode2("", Array(), false)
+        o.left = left.getSimplified()
+        o.content = content
+        o.right = right.getSimplified()
+        o.funcModificator = funcModificator
 
 
-      if(content == "+" || content == "-"){
+        if(content == "+" || content == "-"){
 
-        // Sorting
-        if(o.left.isScalar() && o.right.isX()){
+          // Sorting
+          if(o.left.isScalar() && o.right.isX()){
+            // Swap
+            val __ = o.left
+            o.left = o.right
+            o.right = __
+          }
+
+          // Addition with zero
+          if(right.getExpression() == "0.0"){
+            return left
+          }
+
+          // Ax+bx
+          if(left.isAXForm() && right.isAXForm()){
+            val o = TreeNode2("", Array(), false)
+            val _ol = TreeNode2("", Array(), false)
+            _ol.content = content // + or -
+            _ol.left = left.getAXForm()
+            _ol.right = right.getAXForm()
+            o.left = _ol
+            o.content = "*"
+            o.right = TreeNode2("x")
+            return o
+          }
+        }
+
+        // Nested addition
+        if(left.content == "+" && content == "+" && left.right.isScalar() && right.isScalar()){
+          val _l = left.left
+          val _r = TreeNode2("", Array(), false)
+          _r.content = "+"
+          _r.left = left.right
+          _r.right = right
+          left = _l
+          right = _r
+          return getSimplified()
+        }
+
+        // Swap multiplication
+        if(content == "*" && left.isX() && right.isScalar()){
           // Swap
           val __ = o.left
           o.left = o.right
           o.right = __
         }
-
-        // Addition with zero
-        if(right.getExpression() == "0.0"){
-          return left
+        // Multiplication By Zero
+        if(left.getExpression() == "0.0" && right.isX()){
+          return TreeNode2("0.0")
+        }
+        // MUltiplication By One
+        if(left.getExpression() == "1.0"){
+          return right
         }
 
-        // Ax+bx
-        if(left.isAXForm() && right.isAXForm()){
-          val o = TreeNode2("", Array(), false)
-          val _ol = TreeNode2("", Array(), false)
-          _ol.content = content // + or -
-          _ol.left = left.getAXForm()
-          _ol.right = right.getAXForm()
-          o.left = _ol
-          o.content = "*"
-          o.right = TreeNode2("x")
-          return o
-        }
-      }
-
-      // Nested addition
-      if(left.content == "+" && content == "+" && left.right.isScalar() && right.isScalar()){
-        val _l = left.left
-        val _r = TreeNode2("", Array(), false)
-        _r.content = "+"
-        _r.left = left.right
-        _r.right = right
-        left = _l
-        right = _r
-        return getSimplified()
-      }
-
-      // Swap multiplication
-      if(content == "*" && left.isX() && right.isScalar()){
-        // Swap
-        val __ = o.left
-        o.left = o.right
-        o.right = __
-      }
-      // Multiplication By Zero
-      if(left.getExpression() == "0.0" && right.isX()){
-        return TreeNode2("0.0")
-      }
-      // MUltiplication By One
-      if(left.getExpression() == "1.0"){
-        return right
-      }
 
 
-
-      return o
+        return o
+      }
+    }else{
+      val o = TreeNode2("", Array(), false)
+      o.left = left
+      o.content = content
+      o.right = right
+      o.funcModificator = "identity" // Important
+      val p = o.getSimplified().getSimplified().getSimplified()
+      p.funcModificator = funcModificator
+      return p
     }
     null
   }
