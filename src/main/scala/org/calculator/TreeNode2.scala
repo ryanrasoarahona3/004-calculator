@@ -496,7 +496,7 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
         }
 
         // Nested addition
-        if(left.content == "+" && content == "+" && left.right.isScalar() && right.isScalar()){
+        if(left.content == "+" && left.funcModificator == "identity" && content == "+" && left.right.isScalar() && right.isScalar()){
           val _l = left.left
           val _r = TreeNode2("", Array(), false)
           _r.content = "+"
@@ -504,7 +504,18 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           _r.right = right
           left = _l
           right = _r
-          return getSimplified()
+          return getSimplified().getSimplified()
+        }
+        // Nested multiplication 1
+        if(right.content == "*" && right.funcModificator == "identity" && content == "*" && left.isScalar() && right.left.isScalar()){
+          val _l = TreeNode2("", Array(), false)
+          val _r = right.right
+          _l.content = "*"
+          _l.left = left
+          _l.right = right.left
+          left = _l
+          right = _r
+          return getSimplified().getSimplified()
         }
 
         // Swap multiplication

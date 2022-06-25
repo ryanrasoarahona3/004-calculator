@@ -82,4 +82,31 @@ class TestSimplification extends AnyFunSuite{
     val q = p.getSimplified().getSimplified()
     assert(q.getExpression() == "3.0*sin(3.0*x)")
   }
+
+  test("Simplification.cos(x+x)derivate"){
+    val p = TreeNode2("cos(2.0*x)")
+    val q = p.derivate()
+    val r = q.getSimplified().getSimplified()
+    assert(r.getExpression() == "-2.0*sin(2.0*x)")
+    print()
+  }
+
+  /*
+  test("Simplification.TreeNode2(\"2.0*1.0+0.0*x\")"){
+    val p = TreeNode2("-1.0*((2.0*1.0+0.0*x)*sin(x))")
+    print()
+  }
+   */
+
+  test("Simplification.2.0*sin(2.0*x)"){
+    val p = TreeNode2("2.0*sin(2.0*x)")
+    val q = p.getSimplified()
+    assert(q.getExpression() == "2.0*sin(2.0*x)")
+  }
+
+  test("Simplification.-1.0*2.0*sin(2.0*x)"){
+    val p = TreeNode2("(-1.0)*(2.0*sin(2.0+x))")
+    val q = p.getSimplified()
+    assert(q.getExpression() == "-2.0*sin(x+2.0)")
+  }
 }
