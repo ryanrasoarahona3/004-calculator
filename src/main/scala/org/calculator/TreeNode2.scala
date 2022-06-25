@@ -373,4 +373,33 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
     }
     return null
   }
+
+  def getExpression(): String ={
+    if(left == null && right == null && funcModificator == "identity"){
+      // Constant number or x
+      return ""+content
+    }else if(left != null && right != null && funcModificator == "identity"){
+      if(content == "*"){
+        // Addition within multiplication (need brackets)
+        var leftExpr = left.getExpression()
+        var rightExpr = right.getExpression()
+        if((left.content == "+" || left.content == "-") && left.funcModificator == "identity"){
+          leftExpr = "(" + leftExpr + ")"
+        }
+        if((right.content == "+" || right.content == "-") && right.funcModificator == "identity"){
+          rightExpr = "(" + rightExpr + ")"
+        }
+        return leftExpr+content+rightExpr
+      }else{
+        // Only addition
+        return left.getExpression()+content+right.getExpression()
+      }
+    }else if(funcModificator != "identity"){
+      val tn = copy()
+      tn.funcModificator = "identity"
+      return funcModificator+"("+tn.getExpression()+")"
+    }
+
+    return ""
+  }
 }

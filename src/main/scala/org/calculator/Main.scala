@@ -15,13 +15,24 @@ object Main {
 
       val goButton = new Button("Go")
       val formulaField = new TextField()
-      // val formulaInput = new TextField() // utiliser Panel au lieu de Input, car un bouton doit aussi être inséré
       val formulaInput = new BorderPanel {
         add(new Label("f(x)="), BorderPanel.Position.West)
         add(formulaField, BorderPanel.Position.Center)
         add(goButton, BorderPanel.Position.East)
       }
-      formulaInput.border = BorderFactory.createEmptyBorder(5,5,5,5)
+      formulaInput.border = BorderFactory.createEmptyBorder(5,5,2,5)
+
+      val derivationField = new TextField()
+      val derivationOutput = new BorderPanel {
+        add(new Label("f'(x)="), BorderPanel.Position.West)
+        add(derivationField, BorderPanel.Position.Center)
+      }
+      derivationOutput.border = BorderFactory.createEmptyBorder(0,5,5,5)
+
+      var bottomControls = new BoxPanel(Orientation.Vertical) {
+        contents+= formulaInput
+        contents+= derivationOutput
+      }
 
       val canvas = new Canvas {
       }
@@ -32,6 +43,9 @@ object Main {
           val p = new TreeNode2(formulaField.text)
           canvas.p = p
           canvas.repaint()
+
+          val d = p.derivate()
+          derivationField.text = d.getExpression()
         }
       }
 
@@ -48,7 +62,7 @@ object Main {
 
       contents = new BorderPanel {
         add(canvas, BorderPanel.Position.Center)
-        add(formulaInput, BorderPanel.Position.South)
+        add(bottomControls, BorderPanel.Position.South)
       }
 
       pack()
