@@ -76,4 +76,10 @@ class TestSimplification extends AnyFunSuite{
     val p = TreeNode2("sin(x+x)")
     assert(p.getSimplified().getExpression() == "sin(2.0*x)")
   }
+
+  test("Simplification.cos(3.0*x)"){
+    val p = TreeNode2("1.0*3.0*sin(3.0*x)")
+    val q = p.getSimplified().getSimplified()
+    assert(q.getExpression() == "3.0*sin(3.0*x)")
+  }
 }

@@ -456,9 +456,9 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
       if(getExpression() contains "x"){
         // Variable
         val o = TreeNode2("", Array(), false)
-        o.left = left.getSimplified()
+        o.left = left.getSimplified().getSimplified()
         o.content = content
-        o.right = right.getSimplified()
+        o.right = right.getSimplified().getSimplified()
         o.funcModificator = funcModificator
 
 
