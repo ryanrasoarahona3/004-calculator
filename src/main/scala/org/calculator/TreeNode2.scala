@@ -518,6 +518,20 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           right = _r
           return getSimplified().getSimplified()
         }
+        // Nested multiplication 2
+        if(content == "*" && left.content == "*" && right.funcModificator == "identity"){
+          if(left.left.isScalar() && right.isScalar()){
+            val _l = TreeNode2("", Array(), false)
+            val _r = left.right
+            _l.content = "*"
+            _l.left = left.left
+            _l.right = right
+            left = _l
+            right = _r
+            return getSimplified().getSimplified()
+          }
+        }
+
         // Nested substraction (special case)
         if(content == "+" && funcModificator == "identity"){
           if(right.content == "-"){
@@ -567,5 +581,17 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
       return p
     }
     null
+  }
+
+  def getSimplifiedLoop(): TreeNode2 ={
+    var prevExpr = "NULL"
+    var t = this
+    var expr = t.getExpression()
+    while(prevExpr != expr){
+      prevExpr = expr
+      t = t.getSimplified()
+      expr = t.getExpression()
+    }
+    return t
   }
 }
