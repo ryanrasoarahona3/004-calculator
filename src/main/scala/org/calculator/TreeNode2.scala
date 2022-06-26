@@ -465,6 +465,9 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
         o.right = right.getSimplifiedLoop()
         o.funcModificator = funcModificator
 
+        left = o.left
+        content = o.content
+        right = o.right
 
         if(content == "+" || content == "-"){
 
@@ -557,13 +560,15 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
           o.left = o.right
           o.right = __
         }
-        // Multiplication By Zero
-        if(left.getExpression() == "0.0" && right.isX()){
-          return TreeNode2("0.0")
-        }
-        // MUltiplication By One
-        if(left.getExpression() == "1.0"){
-          return right
+        if(content == "*") {
+          // Multiplication By Zero
+          if (left.getExpression() == "0.0" && right.isX()) {
+            return TreeNode2("0.0")
+          }
+          // MUltiplication By One
+          if (left.getExpression() == "1.0") {
+            return right
+          }
         }
 
 

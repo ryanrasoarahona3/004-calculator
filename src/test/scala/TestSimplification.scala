@@ -134,4 +134,11 @@ class TestSimplification extends AnyFunSuite{
     val r = q.getSimplifiedLoop()
     assert(r.getExpression() == "2.0*x")
   }
+
+  test("Simplification.x+sin(x).derivate"){
+    val p = TreeNode2("x+sin(x)")
+    val q = p.derivate()
+    val r = q.getSimplifiedLoop()
+    assert(r.getExpression() == "1.0+cos(x)")
+  }
 }
