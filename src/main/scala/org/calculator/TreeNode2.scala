@@ -9,7 +9,7 @@ extends JavaTokenParsers {
    * Here are Scala combination parser functions
    */
   def p_variable: Parser[Any] = "x"
-  def p_placeholder: Parser[Any] = "_+".r
+  def p_placeholder: Parser[Any] = "_".r
   def p_float: Parser[Any] = "\\d+(\\.\\d+)?".r
   def p_sincos: Parser[Any] = "(sin|cos)_".r
 
