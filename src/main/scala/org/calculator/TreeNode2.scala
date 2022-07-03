@@ -12,6 +12,7 @@ extends JavaTokenParsers {
   def p_placeholder: Parser[Any] = "_+".r
   def p_float: Parser[Any] = "\\d+(\\.\\d+)?".r
   def p_sincos: Parser[Any] = "(sin|cos)_".r
+  def p_simpleOperation: Parser[Any] = "^(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))?(\\+|\\*|\\-|\\/)(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))$".r
 
   var left: TreeNode2 = null
   var right: TreeNode2 = null
@@ -93,7 +94,14 @@ extends JavaTokenParsers {
    */
   private def isASimpleOperation(): (String, String, String) = {
     val pattern = "^(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))?(\\+|\\*|\\-|\\/)(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))$".r
-    if(pattern.matches(expression)){
+    var o: ParseResult[Any] = null
+    try{
+      o = parseAll(p_simpleOperation, expression)
+    }catch{
+      case e: RuntimeException => return null
+    }
+
+    if(o.successful){
       var pattern(leftExpr, _l, _l1, operator, rightExpr, _r, _l2) = expression
       leftExpr = if(leftExpr == null) "0" else leftExpr
       (leftExpr, operator, rightExpr)
