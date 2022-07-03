@@ -13,6 +13,9 @@ extends JavaTokenParsers {
   def p_float: Parser[Any] = "\\d+(\\.\\d+)?".r
   def p_sincos: Parser[Any] = "(sin|cos)_".r
   def p_simpleOperation: Parser[Any] = "^(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))?(\\+|\\*|\\-|\\/)(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))$".r
+  def p_haveBracketsL: Parser[Any] = ".*\\(.*".r
+  def p_haveBracketsR: Parser[Any] = ".*\\).*".r
+  def p_haveBrackets: Parser[Any] = p_haveBracketsL | p_haveBracketsR
 
   var left: TreeNode2 = null
   var right: TreeNode2 = null
@@ -85,7 +88,14 @@ extends JavaTokenParsers {
    * @return
    */
   private def hasBrackets(): Boolean = {
-    ((expression contains "(") || (expression contains ")"))
+    try{
+      parseAll(p_haveBrackets, expression).get
+      return true
+    }catch{
+      case e: RuntimeException => return false
+    }
+    return false
+    //((expression contains "(") || (expression contains ")"))
   }
 
   /**
