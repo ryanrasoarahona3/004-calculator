@@ -1,6 +1,17 @@
 package org.calculator
 
-case class TreeNode2(var expression: String, maskContent: Array[String] = Array(), needInit: Boolean = true) {
+import scala.util.parsing.combinator.JavaTokenParsers
+
+case class TreeNode2(var expression: String, maskContent: Array[String] = Array(), needInit: Boolean = true)
+extends JavaTokenParsers {
+
+  /**
+   * Here are Scala combination parser functions
+   */
+  def p_variable: Parser[Any] = "x"
+  def p_placeholder: Parser[Any] = "_+".r
+  def p_float: Parser[Any] = "\\d+(\\.\\d+)?".r
+  def p_sincos: Parser[Any] = "(sin|cos)_".r
 
   var left: TreeNode2 = null
   var right: TreeNode2 = null
@@ -21,9 +32,10 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
    */
   def isASimpleNumber(): Boolean = {
     try {
-      expression.toFloat
+      parseAll(p_float, expression).get.toString.toFloat
     } catch {
       case e: NumberFormatException => return false
+      case e: RuntimeException => return false
     }
     true
   }
@@ -33,7 +45,11 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
    * @return
    */
   def isASimpleVariable(): Boolean = {
-    expression == "x"
+    try {
+      return "x" == parseAll(p_variable, expression).get
+    } catch {
+      case e: RuntimeException => return false
+    }
   }
 
   /**
@@ -41,8 +57,13 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
    * @return
    */
   private def isASimplePlaceholder(): Boolean = {
-    val pattern = "_+".r
-    pattern.matches(expression)
+    // val pattern = "_+".r
+    //pattern.matches(expression)
+    try {
+      return "_" == (parseAll(p_placeholder, expression).get)
+    } catch {
+      case e: RuntimeException => return false
+    }
   }
 
   /**
@@ -50,8 +71,12 @@ case class TreeNode2(var expression: String, maskContent: Array[String] = Array(
    * @return
    */
   private def isASimpleFunction(): Boolean = {
-    val pattern = "(sin|cos)_".r
-    pattern.matches(expression)
+    try {
+      parseAll(p_sincos, expression).get
+      return true
+    } catch {
+      case e: RuntimeException => return false
+    }
   }
 
   /**
