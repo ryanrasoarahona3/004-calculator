@@ -12,7 +12,12 @@ extends JavaTokenParsers {
   def p_placeholder: Parser[Any] = "_+".r
   def p_float: Parser[Any] = "\\d+(\\.\\d+)?".r
   def p_sincos: Parser[Any] = "(sin|cos)_".r
-  def p_simpleOperation: Parser[Any] = "^(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))?(\\+|\\*|\\-|\\/)(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))$".r
+
+  def p_validOperandL: Parser[Any] = "(sin_|cos_|_|x|([0-9]+(\\.[0-9]+)?))?".r
+  def p_validOperator: Parser[Any] = "(\\+|\\*|\\-|\\/)".r
+  def p_validOperandR: Parser[Any] = "(sin_|cos_|_|x|([0-9]+(\\\\.[0-9]+)?))".r
+  def p_simpleOperation: Parser[Any] = p_validOperandL~p_validOperator~p_validOperandR
+
   def p_haveBracketsL: Parser[Any] = ".*\\(.*".r
   def p_haveBracketsR: Parser[Any] = ".*\\).*".r
   def p_haveBrackets: Parser[Any] = p_haveBracketsL | p_haveBracketsR
